@@ -1,0 +1,57 @@
+import numpy as np
+import math
+
+# 정규분포 N(0,1)에서 무작위로 샘플포인트 100개짜리 표본 100개 만들기
+mean = 4
+std = 1
+sample = 100
+sample_size = 100
+size = (100, 100)
+# 랜덤 수 생성 (2차원)
+sample_ary = np.random.normal(mean, std, size)
+# 표본 평균 (1차원)
+sample_mean = []
+# 표본 표준편차
+s_deviation = []
+temp = 0
+temp2 = 0
+n = 100
+
+# 표본 평균 구하기
+for i in range(0, sample):
+    temp = 0
+    for j in range(0, sample):
+        temp = temp + sample_ary[i,j]
+    sample_mean.append(temp / 100)
+
+# 표본 표준편차 구하기
+s_deviation = []
+for i in range(0, 100):
+    temp2 = 0
+    for j in range(0, 100):
+        temp2 += (sample_ary[i,j] - sample_mean[i])**2
+    s_deviation.append(math.sqrt(temp2 / 99))
+
+# 95% 신뢰구간 범위 구하기
+confidence_high = []
+confidence_low = []
+for i in range(0, 100):
+    confidence_high.append(sample_mean[i] + (1.96 * s_deviation[i] / math.sqrt(100)))
+    confidence_low.append(sample_mean[i] - (1.96 * s_deviation[i] / math.sqrt(100)))
+
+# 신뢰구간 안에 모 평균 4가 포함되어 있는지 확인
+check_mean = []
+for i in range(0, 100):
+    if (confidence_low[i] <= mean <= confidence_high[i]):
+        check_mean.append(1)
+    else:
+        check_mean.append(0)
+
+# 추정구간안에 모평균이 포함된 표본의 수를 계산한다.
+get_num = 0
+for i in range(0, 100):
+    if (check_mean[i] == 1):
+        get_num = get_num + 1
+
+print(get_num)
+
